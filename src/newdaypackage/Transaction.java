@@ -21,13 +21,13 @@ public class Transaction {
     private LocalDateTime timeStamp;
 /**
  * Constructor to initialize the Transaction with a type and amount.
- * @param transactionType
- * @param bankTransactionAmount
+ * @param type
+ * @param amount
  */
-    public Transaction(final String transactionType,
-            final double bankTransactionAmount) {
-        this.transactionType = transactionType;
-        this.bankTransactionAmount = bankTransactionAmount;
+    public Transaction(final String type,
+            final double amount) {
+        this.transactionType = type;
+        this.bankTransactionAmount = amount;
 
         this.timeStamp = LocalDateTime.now();
     }
