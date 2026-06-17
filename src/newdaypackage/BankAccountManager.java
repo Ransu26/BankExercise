@@ -46,8 +46,13 @@ public class BankAccountManager implements Bank {
         acc1.withdraw(fifthBalance);
         acc1.unfreezeAccount();
         accM1.filterTransactionsAtOrAbove(fthBalance,
-                acc1.getTransactionHistory());
-        accM1.sortTransactionsByAmount(acc1.getTransactionHistory());
+                acc1.getTransactionHistory().stream()
+                .filter(tx ->
+                tx.getTransactionAmount() >= fthBalance).toList());
+        accM1.sortTransactionsByAmount(acc1.getTransactionHistory()
+                .stream().sorted(
+                        (tx1, tx2) -> Double.compare(tx1.getTransactionAmount(),
+                                tx2.getTransactionAmount())).toList());
 
     }
     /**
@@ -57,26 +62,16 @@ public class BankAccountManager implements Bank {
      */
     public void filterTransactionsAtOrAbove(final double amount,
             final List<Transaction> txList) {
-        List<Transaction> filteredTxList = new ArrayList<>();
-        System.out.println("Transactions at or above " + amount);
-        filteredTxList = txList.stream().filter(tx ->
-        tx.getTransactionAmount() >= amount)
-                .toList();
-        filteredTxList.forEach(tx -> System.out.println(tx.toString()));
+        System.out.printf("Transactions at or above %.2f", amount);
+        txList.forEach(tx -> System.out.println(tx.toString()));
     }
     /**
      * Sorts transactions by their amount in ascending order and prints them.
      * @param txList
      */
     public void sortTransactionsByAmount(final List<Transaction> txList) {
-        List<Transaction> sortedList = new ArrayList<>();
         System.out.println("Transactions sorted by amount...");
-        sortedList = txList.stream()
-                .sorted((tx1, tx2) ->
-                Double.compare(tx1.getTransactionAmount(),
-                        tx2.getTransactionAmount()))
-                .toList();
-        sortedList.forEach(tx -> System.out.println(tx.toString()));
+        txList.forEach(tx -> System.out.println(tx.toString()));
     }
     /**
      * Constructor for the BankAccountManager class.
@@ -111,10 +106,11 @@ public class BankAccountManager implements Bank {
             BankAccount bankAccount = accounts.get(id);
 
             SavingsAccount owner = (SavingsAccount) bankAccount;
-
+            String accountBalance =
+                    String.format("%.2f", bankAccount.getBalance());
             System.out.println("Account ID:" + id + ", Account name: "
                     + owner.getOwnerName() + ", Balance: "
-                    + bankAccount.getBalance() + ", isFrozen: "
+                    + accountBalance + ", isFrozen: "
                     + bankAccount.isFrozen());
         }
 
@@ -128,10 +124,11 @@ public class BankAccountManager implements Bank {
             int entryAccountId = accountEntry.getKey();
             BankAccount account = accountEntry.getValue();
             SavingsAccount owner = (SavingsAccount) account;
+            String accountBalance = String.format("%.2f", account.getBalance());
             System.out.println("Account ID:"
                     + entryAccountId + ", Account name: "
                     + owner.getOwnerName() + ", Balance: "
-                    + account.getBalance() + ", isFrozen: "
+                    + accountBalance + ", isFrozen: "
                     + account.isFrozen());
         }
     }
