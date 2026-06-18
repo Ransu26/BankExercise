@@ -60,6 +60,7 @@ public class BankAccountManager implements Bank {
     public void filterTransactionsAtOrAbove(final double amount,
             final List<Transaction> txList) {
         System.out.printf("Transactions at or above %.2f", amount);
+        System.out.println();
         List<Transaction> filteredTxList = txList.stream()
                 .filter(tx -> tx.getTransactionAmount() >= amount).toList();
         filteredTxList.forEach(tx -> System.out.println(tx.toString()));
