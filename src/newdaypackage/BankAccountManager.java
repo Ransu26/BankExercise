@@ -1,6 +1,5 @@
 package newdaypackage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +45,7 @@ public class BankAccountManager implements Bank {
         acc1.withdraw(fifthBalance);
         acc1.unfreezeAccount();
         accM1.filterTransactionsAtOrAbove(fthBalance,
-                acc1.getTransactionHistory().stream()
-                .filter(tx ->
-                tx.getTransactionAmount() >= fthBalance).toList());
+                acc1.getTransactionHistory());
         accM1.sortTransactionsByAmount(acc1.getTransactionHistory()
                 .stream().sorted(
                         (tx1, tx2) -> Double.compare(tx1.getTransactionAmount(),
@@ -63,7 +60,9 @@ public class BankAccountManager implements Bank {
     public void filterTransactionsAtOrAbove(final double amount,
             final List<Transaction> txList) {
         System.out.printf("Transactions at or above %.2f", amount);
-        txList.forEach(tx -> System.out.println(tx.toString()));
+        List<Transaction> filteredTxList = txList.stream()
+                .filter(tx -> tx.getTransactionAmount() >= amount).toList();
+        filteredTxList.forEach(tx -> System.out.println(tx.toString()));
     }
     /**
      * Sorts transactions by their amount in ascending order and prints them.
@@ -71,7 +70,11 @@ public class BankAccountManager implements Bank {
      */
     public void sortTransactionsByAmount(final List<Transaction> txList) {
         System.out.println("Transactions sorted by amount...");
-        txList.forEach(tx -> System.out.println(tx.toString()));
+        List<Transaction> sortedTxList = txList.stream()
+                .sorted((tx1, tx2) ->
+                Double.compare(tx1.getTransactionAmount(),
+                        tx2.getTransactionAmount())).toList();
+        sortedTxList.forEach(tx -> System.out.println(tx.toString()));
     }
     /**
      * Constructor for the BankAccountManager class.
